@@ -33,3 +33,7 @@ A Python-based movie recommendation system with a Streamlit web app interface. T
 - Source: [MovieLens Dataset](https://grouplens.org/datasets/movielens/)
 
 ---
+
+### How it Works
+
+![Demo](test_video/output.gif)
