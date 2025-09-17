@@ -72,16 +72,23 @@ genre_df = pd.DataFrame(genre_vectors, columns=mlb.classes_)
 
 def recommend_movie_genre(movies_df, most_similar_idx, n=10):
     """
-    Return a DataFrame of recommended movies by genre, including clean_title and movieId.
+    Return a DataFrame of recommended movies by genre.
     """
-    X = movies_df.drop(['genres','year','clean_title'], axis=1)
+    # Use the genre one-hot vectors
+    X = mlb.transform(movies_df['genres'])
+    
     knn = NearestNeighbors(metric='cosine', algorithm='brute')
     knn.fit(X)
-    distances, idxs = knn.kneighbors(X[X['movieId']==most_similar_idx], n_neighbors=n+1)
-    # Skip the first neighbor (itself)
-    neighbor_ids = movies_df.iloc[idxs[0][1:]]['movieId'].tolist()
-    rec_df = movies_df[movies_df['movieId'].isin(neighbor_ids)][['movieId','clean_title']]
+    
+    query_idx = movies_df.index[movies_df['movieId']==most_similar_idx][0]
+    distances, idxs = knn.kneighbors([X[query_idx]], n_neighbors=n+1)
+    
+    # Skip itself
+    neighbor_idxs = idxs[0][1:]
+    
+    rec_df = movies_df.iloc[neighbor_idxs][['movieId','clean_title','genres']]
     return rec_df
+
 
 # ---------------------------
 # User-based recommendations
@@ -101,7 +108,7 @@ def get_similar_movies(ratings_df, most_similar_idx, avg_ratings, thresh=0.001, 
     """
     Return user-based recommended movies as a DataFrame with movieId and clean_title.
     """
-    weighted_avg = get_weighted_avg_rating(ratings_df, avg_ratings, most_similar_idx)
+    weighted_avg = get_weighted_avg_rating(avg_ratings, most_similar_idx)
     similar_users = ratings_df[
         (ratings_df['movieId']==most_similar_idx) & (ratings_df['rating'] >= weighted_avg)
     ]['userId'].unique()
