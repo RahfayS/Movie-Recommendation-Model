@@ -1,0 +1,39 @@
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment / dependencies
+.env
+venv/
+*.egg-info/
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter / IPython
+.ipynb_checkpoints
+
+# Data files (ignore raw datasets, keep processed if needed)
+datasets/
+*.csv
+*.tsv
+*.json
+*.parquet
+
+# Streamlit cache
+.streamlit/
+
+# VSCode / IDE settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
